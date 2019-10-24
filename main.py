@@ -77,9 +77,14 @@ def main():
     teams = UCCXConfig.getteams(hostname, apiusername, apipassword)
     print(len(teams), 'teams retrieved\n')
 
-    # create a new spreadsheet
+    # create treigger overview
+    print('Retrieving triggers from UCCX...')
+    triggers = UCCXConfig.getriggercontacts(hostname, apiusername, apipassword)
+    print(len(triggers), 'triggers retrieved\n')
+
+    # create a new spreadsheet for the teams
     sheetid = GSheets.createsheet(auth,'teams')
-    print('Google Sheet created: https://docs.google.com/spreadsheets/d/{0}/edit#gid=0'.format(sheetid))
+    print('Google Sheet created for teams: https://docs.google.com/spreadsheets/d/{0}/edit#gid=0'.format(sheetid))
 
     # write result to Google Sheets
     # first format the data
@@ -90,6 +95,14 @@ def main():
     result = GSheets.updatesheet(auth,sheetid,gsheetexport)
     print('{0} cells updated.'.format(result.get('updatedCells')))
 
+    # create a new spreadsheet for the triggers
+    sheetid = GSheets.createsheet(auth,'triggers')
+    print('Google Sheet created for triggers: https://docs.google.com/spreadsheets/d/{0}/edit#gid=0'.format(sheetid))
+    print(triggers)
+    gsheetexport = GSheets.getformattedtriggers(triggers)
+    # populate the sheet
+    result = GSheets.updatesheet(auth, sheetid, gsheetexport)
+    print('{0} cells updated.'.format(result.get('updatedCells')))
 
 
     return 0

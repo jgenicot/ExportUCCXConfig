@@ -155,3 +155,17 @@ def getagentsfromteam(agents, teamname):
     return listofagents
 
 
+def getriggercontacts(hostname, username, password):
+    # get a list of all triggers, format the content so it is useable as a contact list
+    triggercontacts = []
+    # use the uri in the get request to retrieve the triggers
+    triggers = requests.get('https://' + hostname + '/adminapi/trigger', auth=HTTPBasicAuth(username, password), verify=False)
+    root = ET.fromstring(triggers.content)
+    # iterates the triggers and enumerates the names and values
+    for trigger in root.findall('trigger'):
+        # create a contact list with specific values from the triggers, don't add triggers with wildcard X
+        if 'X' not in trigger.find('directoryNumber').text:
+            triggercontacts.append({'Extension': trigger.find('directoryNumber').text, 'Description': trigger.find('description').text,
+                           'Application': trigger.find('application').attrib['name']})
+    # returns a list of a list of trigger dicts
+    return triggercontacts

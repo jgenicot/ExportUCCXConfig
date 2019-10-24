@@ -40,6 +40,9 @@ def getskillheader():
 def getteamheader():
     return ['Team Name','Primary Supervisor','Secondary Supervisors','Assigned CSQS','Assigned Resources']
 
+def gettriggerheader():
+    return ['Number', 'Description','Application']
+
 def getformattedskillmap(skillmap):
     skillmapformat = []
     skillmapformat.append(getskillheader())
@@ -138,6 +141,13 @@ def getformattedteams(teams,agents):
         teamformat.append([''])
     return teamformat
 
+def getformattedtriggers(triggers):
+    triggersformat = []
+    triggersformat.append(gettriggerheader())
+    for trigger in triggers:
+        triggersformat.append(
+            [trigger['Extension'], trigger['Description'], trigger['Application']])
+    return triggersformat
 
 def updatesheet(creds, spreadsheet_id, values):
     # build the sheet service
